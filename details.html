@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Details</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark-theme');}</script>
+  <script src="xlsx.full.min.js"></script>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+  <div class="container">
+    <div class="portal-header">
+      <button onclick="location.href='index.html'" class="back-btn">⬅ Back</button>
+      <h1>Student Details</h1>
+    </div>
+    <input type="text" id="searchInput" placeholder="Search by name, roll no, etc." oninput="filterStudents()" />
+    <div id="studentList" class="grid-container"></div>
+    <footer>Made by Tech In My Style</footer>
+  </div>
+
+<script>
+let allStudents = [];
+
+function cleanPhone(num) {
+  return num ? num.toString().replace(/[^\d+]/g, '') : '';
+}
+
+function createImageElement(roll) {
+  const img = document.createElement("img");
+  img.className = "zoom-img student-img";
+  const rollLC = roll.toLowerCase();
+  img.src = `img/${rollLC}.jpg`;
+
+  img.onerror = function () {
+    img.onerror = null;
+    img.src = `img/${rollLC}.jpeg`;
+
+    img.onerror = function () {
+      img.onerror = null;
+      img.src = `img/${rollLC}.png`;
+
+      img.onerror = function () {
+        img.onerror = null;
+        img.src = "img/default.jpg"; // fallback
+      };
+    };
+  };
+
+  return img;
+}
+
+function getStudentDetails() {
+  const year = localStorage.getItem("selectedYear");
+  const branch = localStorage.getItem("selectedBranch");
+  const filePath = `excel_sheets/${year}_batch_${branch}.xlsx`;
+
+  fetch(filePath)
+    .then(res => res.arrayBuffer())
+    .then(buffer => {
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(sheet);
+      allStudents = data;
+      displayStudents(data);
+    })
+    .catch(err => {
+      document.getElementById("studentList").innerHTML = `<p>Failed to load student data.</p>`;
+      console.error(err);
+    });
+}
+
+function displayStudents(students) {
+  const container = document.getElementById("studentList");
+  container.innerHTML = "";
+
+  if (students.length === 0) {
+    container.innerHTML = "<p>No students found.</p>";
+    return;
+  }
+
+  students.forEach(student => {
+    const rollRaw = student["Roll No./Register No."] || student["Roll Number"] || "unknown";
+    const roll = rollRaw.toString().trim().toLowerCase();
+    const fullName = `${student["First Name"] || ""} ${student["Last Name"] || ""}`.trim();
+    const fatherName = `${student["Father Name"] || ""} ${student["Father Last Name"] || ""}`.trim();
+    const studentMobile = cleanPhone(student["Mobile No."] || student["Student Mobile No."] || student["Phone No."]);
+    
+    const possibleParentKeys = [
+      "Father Address Mobile Number",
+      "Father Address Phone Number",
+      "Parent Mobile",
+      "Parent Mobile Number",
+      "Father Mobile No.",
+      "Father Mobile Number",
+      "Parent Contact"
+    ];
+    let parentMobile = "";
+    for (const key of possibleParentKeys) {
+      if (student[key]) {
+        parentMobile = cleanPhone(student[key]);
+        break;
+      }
+    }
+
+    const email = student["Email"] || "";
+
+    const div = document.createElement("div");
+    div.className = "student-card";
+
+    const img = createImageElement(roll);
+
+    div.innerHTML = `
+      <div class="img-wrapper" id="img-${roll}"></div>
+      <div class="student-info">
+        <h3>${fullName}</h3>
+        <p><strong>Roll No:</strong> ${roll.toUpperCase()}</p>
+        ${fatherName ? `<p><strong>Father:</strong> ${fatherName}</p>` : ""}
+        ${studentMobile ? `
+          <p><strong>Student:</strong> ${studentMobile}
+            <span class="inline-btns">
+              <a href="tel:${studentMobile}">📞</a>
+              <a href="sms:${studentMobile}">💬</a>
+            </span>
+          </p>` : ""}
+        ${parentMobile ? `
+          <p><strong>Parent:</strong> ${parentMobile}
+            <span class="inline-btns">
+              <a href="tel:${parentMobile}">📞</a>
+              <a href="sms:${parentMobile}">💬</a>
+            </span>
+          </p>` : ""}
+        ${email ? `
+          <p><strong>Email:</strong>
+            <a href="mailto:${email}" style="color: var(--accent); font-size: 12px;">${email}</a>
+            <span class="inline-btns">
+              <a href="mailto:${email}">✉️</a>
+            </span>
+          </p>` : ""}
+      </div>
+    `;
+
+    div.querySelector(`#img-${roll}`).appendChild(img);
+    container.appendChild(div);
+  });
+}
+
+function filterStudents() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = allStudents.filter(student =>
+    Object.values(student).some(
+      value => value && value.toString().toLowerCase().includes(search)
+    )
+  );
+  displayStudents(filtered);
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark-theme");
+  localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+}
+
+// Initial load
+(function () {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+  }
+  getStudentDetails();
+})();
+</script>
+</body>
+</html>

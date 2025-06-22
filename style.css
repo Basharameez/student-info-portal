@@ -1,0 +1,208 @@
+:root {
+  --bg: #f9f9f9;
+  --text: #333;
+  --card-bg: #fff;
+  --accent: #3498db;
+  --border: #ccc;
+}
+
+body.dark-theme {
+  --bg: #121212;
+  --text: #eee;
+  --card-bg: #1e1e1e;
+  --accent: #8e44ad;
+  --border: #444;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.portal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.filters,
+input[type="text"] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+select, input[type="text"], button {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.theme-toggle {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 15px;
+}
+
+.student-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.student-card:hover {
+  transform: translateY(-5px);
+}
+
+.student-img {
+  width: 80px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.student-img:hover {
+  transform: scale(1.8);
+  z-index: 10;
+  position: relative;
+}
+
+.student-info {
+  margin-top: 10px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.student-info p {
+  margin: 4px 0;
+}
+
+.inline-btns {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.inline-btns a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  padding: 6px 8px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  min-width: 34px;
+  min-height: 34px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.inline-btns a:hover {
+  background: #2c80b4; /* slightly darker than --accent */
+  transform: scale(1.05);
+}
+
+.inline-btns a:active {
+  transform: scale(0.95);
+}
+
+
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 10px;
+  color: #777;
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+ .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+}
+
+@media (max-width: 400px) {
+ .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+}

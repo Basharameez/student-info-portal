@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEC Student Info Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+  <div class="container">
+    <div class="portal-header">
+      <img src="img/logo.jpg" alt="Logo" class="logo" />
+      <h1>NEC Student Info Portal</h1>
+    </div>
+    <div class="filters">
+      <select id="yearSelect">
+        <option value="" disabled selected>Select Year</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+      </select>
+
+      <select id="branchSelect">
+        <option value="" disabled selected>Select Branch</option>
+        <option value="ai">AI</option>
+        <option value="it">IT</option>
+      </select>
+
+      <button onclick="getStudentDetails()">Get Details</button>
+    </div>
+    <footer>Made by Tech In My Style</footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
